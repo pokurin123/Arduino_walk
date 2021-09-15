@@ -31,6 +31,7 @@ while True:
         mp_drawing.draw_landmarks(
             image, results.pose_landmarks, mp_pose.POSE_CONNECTIONS)
         cv2.imshow('MediaPipe Pose', image)
+        #各種座標をkeypointsという配列内に辞書形で格納している
         keypoints = []
         for data_point in results.pose_landmarks.landmark:
             keypoints.append({
@@ -40,6 +41,7 @@ while True:
                                 'Visibility': data_point.visibility,
                                 })
         print(keypoints[31])
+        #各足の足先の座標を取得し、その座標から足を踏み込んでいるか判断する
         left_toe = keypoints[31]
         right_toe = keypoints[32]
         dict_min["left"].append(left_toe["Y"])
@@ -71,6 +73,9 @@ while True:
 
 #right 0.13310673460364342
 # -0.26524296402931213
+
+#動画全体の足先の座標から四分位を算出する
+#踏み込んでいる座標を全体で記録された座標中の第一四分位数以下の座標とする
 
 q75, q25 = np.percentile(dict_min["left"], [75 ,25])
 iqr = q75 - q25
